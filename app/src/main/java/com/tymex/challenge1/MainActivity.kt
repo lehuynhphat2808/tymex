@@ -31,12 +31,18 @@ class MainActivity : AppCompatActivity() {
         convertButton = findViewById(R.id.convertButton)
         resultTextView = findViewById(R.id.resultTextView)
 
-        // Thiết lập Spinner với các đơn vị tiền tệ
-        val currencies = arrayOf("EUR", "USD", "GBP", "JPY", "AUD") // Thêm các đơn vị khác nếu cần
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, currencies)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        currencyFromSpinner.adapter = adapter
-        currencyToSpinner.adapter = adapter
+        // Quan sát danh sách đơn vị tiền tệ từ ViewModel
+        viewModel.currencies.observe(this, Observer { currencies ->
+            val currencyCodes = currencies.keys.toList()
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, currencyCodes)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            currencyFromSpinner.adapter = adapter
+            currencyToSpinner.adapter = adapter
+        })
+
+        // Gọi API để lấy tỷ giá hối đoái và danh sách đơn vị tiền tệ
+        viewModel.fetchExchangeRates(apiKey)
+        viewModel.fetchSupportedCurrencies(apiKey)
 
         // Quan sát dữ liệu từ ViewModel
         viewModel.exchangeRates.observe(this, Observer { response ->
@@ -55,8 +61,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-
-        // Gọi API để lấy tỷ giá hối đoái
-        viewModel.fetchExchangeRates(apiKey)
     }
 }

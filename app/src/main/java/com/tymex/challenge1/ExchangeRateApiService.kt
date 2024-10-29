@@ -8,4 +8,9 @@ interface ExchangeRateApiService {
         @Query("base") baseCurrency: String = "EUR",
         @Query("symbols") symbols: String? = null
     ): ExchangeRateResponse
+
+    @GET("symbols")
+    suspend fun getSupportedCurrencies(
+        @Query("access_key") apiKey: String
+    ): SupportedCurrenciesResponse
 }
