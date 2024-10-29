@@ -18,10 +18,18 @@
         android:inputType="numberDecimal"/>
 
     <Spinner
-        android:id="@+id/currencySpinner"
+        android:id="@+id/currencyFromSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/amountEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <Spinner
+        android:id="@+id/currencyToSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/currencyFromSpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -30,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Chuyển đổi"
-        app:layout_constraintTop_toBottomOf="@id/currencySpinner"
+        app:layout_constraintTop_toBottomOf="@id/currencyToSpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 

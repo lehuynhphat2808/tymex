@@ -14,7 +14,8 @@ import androidx.lifecycle.Observer
 class MainActivity : AppCompatActivity() {
     private val viewModel: ExchangeRateViewModel by viewModels()
     private lateinit var amountEditText: EditText
-    private lateinit var currencySpinner: Spinner
+    private lateinit var currencyFromSpinner: Spinner
+    private lateinit var currencyToSpinner: Spinner
     private lateinit var convertButton: Button
     private lateinit var resultTextView: TextView
 
@@ -25,7 +26,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         amountEditText = findViewById(R.id.amountEditText)
-        currencySpinner = findViewById(R.id.currencySpinner)
+        currencyFromSpinner = findViewById(R.id.currencyFromSpinner)
+        currencyToSpinner = findViewById(R.id.currencyToSpinner)
         convertButton = findViewById(R.id.convertButton)
         resultTextView = findViewById(R.id.resultTextView)
 
@@ -33,7 +35,8 @@ class MainActivity : AppCompatActivity() {
         val currencies = arrayOf("EUR", "USD", "GBP", "JPY", "AUD") // Thêm các đơn vị khác nếu cần
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, currencies)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        currencySpinner.adapter = adapter
+        currencyFromSpinner.adapter = adapter
+        currencyToSpinner.adapter = adapter
 
         // Quan sát dữ liệu từ ViewModel
         viewModel.exchangeRates.observe(this, Observer { response ->
@@ -41,10 +44,11 @@ class MainActivity : AppCompatActivity() {
                 val rates = response.rates
                 convertButton.setOnClickListener {
                     val amount = amountEditText.text.toString().toDoubleOrNull()
-                    val selectedCurrency = currencySpinner.selectedItem.toString()
-                    if (amount != null && rates.containsKey(selectedCurrency)) {
-                        val convertedAmount = amount * rates[selectedCurrency]!!
-                        resultTextView.text = "Kết quả: $convertedAmount $selectedCurrency"
+                    val selectedFromCurrency = currencyFromSpinner.selectedItem.toString()
+                    val selectedToCurrency = currencyToSpinner.selectedItem.toString()
+                    if (amount != null && rates.containsKey(selectedFromCurrency) && rates.containsKey(selectedToCurrency)) {
+                        val convertedAmount = amount * (rates[selectedToCurrency]!! / rates[selectedFromCurrency]!!)
+                        resultTextView.text = "Kết quả: $convertedAmount $selectedToCurrency"
                     } else {
                         resultTextView.text = "Vui lòng nhập số tiền hợp lệ."
                     }
